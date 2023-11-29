@@ -3,7 +3,6 @@ pipeline {
         docker {
             image 'maven:3.9.5-eclipse-temurin-17-alpine' 
             args '-v /root/.m2:/root/.m2 --platform linux/x86_64' 
-            url 'http://127.0.0.1:2376'
         }
     }
     stages {
