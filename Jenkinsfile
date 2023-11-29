@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'maven:3.9.5-eclipse-temurin-17-alpine' 
-            args '-v /root/.m2:/root/.m2 --platform linux/x86_64' 
+            args '-v /Users/ikaouam/.m2:/root/.m2 --platform linux/x86_64' 
         }
     }
     stages {
