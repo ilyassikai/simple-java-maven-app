@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bonita-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bonita-db
+  template:
+    metadata:
+      labels:
+        app: bonita-db
+    spec:
+      containers:
+      - name: bonita-db-container
+        image: bonitasoft/bonita-postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          value: my-secret-pw

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bonita-service
+spec:
+  selector:
+    app: bonita
+  ports:
+    - protocol: TCP
+      port: 80  # You can use any desired port
+      targetPort: 8080  # Port on which Bonita is running inside the pod
+  type: ClusterIP  # Adjust the service type based on your needs

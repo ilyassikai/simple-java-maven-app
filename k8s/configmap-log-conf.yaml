@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bonita-logs-config
+data:
+  log4j2-loggers.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Configuration status="info" monitorInterval="10">
+        <Loggers>
+
+            <Logger name="org.bonitasoft" level="DEBUG"/>
+
+            <Logger name="com.arjuna" level="INFO"/>
+            <Logger name="org.jboss.narayana.tomcat.jta" level="INFO"/>
+
+            <!-- At platform initial setup, activate INFO messages to have details on what is happening: -->
+            <Logger name="org.bonitasoft.platform" level="INFO"/>
+
+            <Logger name="org.bonitasoft.engine.EngineInitializer" level="INFO"/>
+
+            <!-- If you want to have more log on connectors execution only, you can activate and modify the following lines -->
+            <!-- <Logger name="org.bonitasoft.engine.core.connector" level="DEBUG" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.connector" level="DEBUG" /> -->
+
+            <!-- If you want to have more log on expressions only, you can activate and modify the following lines -->
+            <!-- <Logger name="org.bonitasoft.engine.expression" level="DEBUG" /> -->
+
+            <!-- If you want to have more log on input/output of API calls, you can activate and modify the following line -->
+            <!-- <Logger name="org.bonitasoft.engine.api" level="TRACE" /> -->
+
+            <!-- If you want to have more log on Asynchronous executions (Work/Job), you can activate and modify the following lines -->
+            <!-- <Logger name="org.bonitasoft.engine.work" level="DEBUG" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.execution.work" level="DEBUG" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.job" level="DEBUG" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.jobs" level="DEBUG" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.scheduler" level="DEBUG" /> -->
+            <!-- Specific logger for auditing work execution -->
+            <Logger name="BONITA_WORK_AUDIT.EXECUTION" level="INFO"/>
+
+            <!-- If you want to deactivate warnings on wrong handling of transient data -->
+            <!-- <Logger name="org.bonitasoft.engine.operation.TransientDataLeftOperandHandler" level="ERROR" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.core.data.instance.impl" level="ERROR" /> -->
+
+            <!-- Hibernate is used by Bonita and very verbose in the log. Should stay with WARN level except when debugging database access issues -->
+            <Logger name="org.hibernate" level="WARN"/>
+
+            <!-- Remove wrong warnings about ehcache: -->
+            <Logger name="org.hibernate.orm.cache" level="ERROR"/>
+
+            <!-- enable tracking of slow execution queries: -->
+            <Logger name="org.hibernate.SQL_SLOW" level="INFO"/>
+
+            <!-- Ehcache is used by Bonita and very verbose in the log.  Should stay with WARN level except when debugging cache issues -->
+            <Logger name="net.sf.ehcache" level="WARN"/>
+
+            <!-- Deactivate annoying false warning: -->
+            <Logger name="org.hibernate.type.TypeFactory" level="ERROR"/>
+
+            <Logger name="org.springframework" level="WARN"/>
+            <Logger name="org.bonitasoft.engine.service.impl.BonitaSpringContext" level="WARN"/>
+
+            <!-- tuckey -->
+            <Logger name="org.tuckey" level="WARN"/>
+
+            <!-- If you want to have more log on rest api extension provided logger, you can activate and modify the following lines -->
+            <!-- <Logger name="org.bonitasoft.api.extension" level="DEBUG" /> -->
+
+            <!-- If you want to track Unauthorized static permission checks: -->
+            <!-- <Logger name="org.bonitasoft.engine.authorization.PermissionServiceImpl" level="DEBUG" /> -->
+            <!-- <Logger name="com.bonitasoft.engine.authorization.PermissionServiceExt" level="DEBUG"/> -->
+
+            <!--  -->
+            <!-- Subscription edition specific logging configuration: -->
+            <!--  -->
+
+            <Logger name="com.bonitasoft" level="INFO"/>
+
+            <!-- If you want to have logs on execution time performance for BDM filtering, you can activate the following line: -->
+            <!-- <Logger name="com.bonitasoft.engine.business.data.impl" level="TRACE" /> -->
+
+            <!-- If you want to have more log on input/output of API calls, you can activate and modify the following line -->
+            <!-- <Logger name="com.bonitasoft.engine.api" level="TRACE" /> -->
+
+            <!-- Display monitoring information when property 'org.bonitasoft.engine.monitoring.publisher.logging.enable' is set to true in configuration file 'bonita-platform-sp-custom.properties' -->
+            <Logger name="com.bonitasoft.engine.monitoring.LoggingMeterRegistry" level="INFO"/>
+
+            <!-- If you want to have more log on SSO authentication, you can activate and modify the following lines -->
+            <!-- <Logger name="org.bonitasoft.console.common.server.auth" level="DEBUG" /> -->
+            <!-- <Logger name="org.bonitasoft.engine.core.login" level="DEBUG" /> -->
+            <!-- <Logger name="com.bonitasoft.engine.authentication" level="DEBUG" /> -->
+
+            <!-- keycloak -->
+            <!-- <Logger name="org.keycloak" level="ALL" /> -->
+            <!-- <Logger name="class org.keycloak" level="ALL" /> -->
+
+        </Loggers>
+    </Configuration>
+  log4j2-appenders.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Configuration status="info" monitorInterval="60">
+        <Properties>
+            <Property name="LOG_PATTERN">%d{ISO8601_OFFSET_DATE_TIME_HHMM} | ${hostName} | %-5p | [%t|%T] %c{1.} - %m%n</Property>
+            <Property name="baseDir">/opt/bonita/logs/</Property>
+        </Properties>
+        <Appenders>
+            <!-- use json logger if json output is required -->
+            <Console name="Console-JSON" target="SYSTEM_OUT">
+                <JSONLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true">
+                    <KeyValuePair key="timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}"/>
+                </JSONLayout>
+            </Console>
+            <Console name="Console" target="SYSTEM_OUT">
+                <PatternLayout pattern="${LOG_PATTERN}"/>
+            </Console>
+        </Appenders>
+
+        <Loggers>
+            <Root level="DEBUG">
+                <AppenderRef ref="Console"/>
+            </Root>
+        </Loggers>
+
+    </Configuration>
